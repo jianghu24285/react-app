@@ -6,9 +6,9 @@ process.env.NODE_ENV = 'production';
 
 // 编译/发布环境 => 测试环境
 process.env.BUILD_ENV = 'test';
-// base url,例: 'open.test.ximalaya.com'
+// base url,例: 'open.test.baidu.com'
 process.env.BASE_URL = '';
-// 配置静态资源url,最终影响output下的publicPath,例: '//static2.test.ximalaya.com/lib/react-app/last/build/' 
+// 配置静态资源url,最终影响output下的publicPath,例: '//static.test.baidu.com/lib/react-app/last/build/' 
 process.env.PUBLIC_URL = '';
 
 // Makes the script crash on unhandled rejections instead of silently

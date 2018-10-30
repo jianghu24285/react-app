@@ -6,7 +6,7 @@ process.env.NODE_ENV = 'development';
 
 // 编译/发布环境 => 开发环境
 process.env.BUILD_ENV = 'development';
-// base url,例: 'open.test.ximalaya.com'
+// base url,例: 'www.test.baidu.com'
 process.env.BASE_URL = '';
 // 配置静态资源url,最终影响output下的publicPath(开发环境不需要配置).
 process.env.PUBLIC_URL = '';

@@ -6,9 +6,9 @@ process.env.NODE_ENV = 'production';
 
 // 编译/发布环境 => 生产环境
 process.env.BUILD_ENV = 'production';
-// base url,例: 's1.xmcdn.com'
+// base url,例: 'open.baidu.com'
 process.env.BASE_URL = '';
-// 配置静态资源url,最终影响output下的publicPath,例: '//s1.xmcdn.com/sr012018/react-app/last/build/'
+// 配置静态资源url,最终影响output下的publicPath,例: '//open.baidu.com/sr012018/react-app/last/build/'
 process.env.PUBLIC_URL = '';
 // 关闭source-map
 process.env.GENERATE_SOURCEMAP = false;
