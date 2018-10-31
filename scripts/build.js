@@ -4,14 +4,17 @@
 process.env.BABEL_ENV = 'production';
 process.env.NODE_ENV = 'production';
 
-// 编译/发布环境 => 生产环境
-process.env.BUILD_ENV = 'production';
-// base url,例: 'open.baidu.com'
-process.env.BASE_URL = '';
 // 配置静态资源url,最终影响output下的publicPath,例: '//open.baidu.com/sr012018/react-app/last/build/'
 process.env.PUBLIC_URL = '';
 // 关闭source-map
 process.env.GENERATE_SOURCEMAP = false;
+
+// 自定义的环境变量,必须 REACT_APP 打头,否则编译时会被忽略 !!
+
+// 编译/发布环境 => 生产环境
+process.env.REACT_APP_BUILD_ENV = 'production';
+// base url,例: 'open.baidu.com'
+process.env.REACT_APP_BASE_URL = '';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will

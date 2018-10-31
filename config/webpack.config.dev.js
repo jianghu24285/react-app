@@ -163,8 +163,14 @@ module.exports = {
           // "style" loader turns CSS into JS modules that inject <style> tags.
           // In production, we use a plugin to extract that CSS to a file, but
           // in development "style" loader enables hot editing of CSS.
+          /**
+           * sass和css处理
+           * 排除node_modules目录
+           * 开启css模块化
+           */
           {
             test: /\.(css|scss)$/,
+            exclude: /node_modules/,  // 不处理node_modules目录
             use: [
               require.resolve('style-loader'),
               {
@@ -200,9 +206,14 @@ module.exports = {
               }
             ],
           },
-          // less
+          /**
+           * less处理
+           * 排除node_modules目录
+           * 开启css模块化
+           */
           {
             test: /\.less$/,
+            exclude: /node_modules/,  // 不处理node_modules目录
             use: [
               require.resolve('style-loader'),
               {
@@ -211,6 +222,88 @@ module.exports = {
                   importLoaders: 1,
                   module: true, // 开启css模块化
                   localIdentName: '[local]-[hash:6]',  // css类名格式
+                },
+              },
+              {
+                loader: require.resolve('postcss-loader'),
+                options: {
+                  // Necessary for external CSS imports to work
+                  // https://github.com/facebookincubator/create-react-app/issues/2677
+                  ident: 'postcss',
+                  plugins: () => [
+                    require('postcss-flexbugs-fixes'),
+                    autoprefixer({
+                      browsers: [
+                        '>1%',
+                        'last 4 versions',
+                        'Firefox ESR',
+                        'not ie < 9', // React doesn't support IE8 anyway
+                      ],
+                      flexbox: 'no-2009',
+                    }),
+                  ],
+                },
+              },
+              {
+                loader: require.resolve('less-loader')
+              }
+            ],
+          },
+          /**
+           * sass和css处理
+           * 针对node_modules目录
+           * 不开启css模块化
+           */
+          {
+            test: /\.(css|scss)$/,
+            include: /node_modules/,  // 仅处理node_modules目录
+            use: [
+              require.resolve('style-loader'),
+              {
+                loader: require.resolve('css-loader'),
+                options: {
+                  importLoaders: 1,
+                },
+              },
+              {
+                loader: require.resolve('postcss-loader'),
+                options: {
+                  // Necessary for external CSS imports to work
+                  // https://github.com/facebookincubator/create-react-app/issues/2677
+                  ident: 'postcss',
+                  plugins: () => [
+                    require('postcss-flexbugs-fixes'),
+                    autoprefixer({
+                      browsers: [
+                        '>1%',
+                        'last 4 versions',
+                        'Firefox ESR',
+                        'not ie < 9', // React doesn't support IE8 anyway
+                      ],
+                      flexbox: 'no-2009',
+                    }),
+                  ],
+                },
+              },
+              {
+                loader: require.resolve('sass-loader')
+              }
+            ],
+          },
+          /**
+           * less处理
+           * 针对node_modules目录
+           * 不开启css模块化
+           */
+          {
+            test: /\.less$/,
+            include: /node_modules/,  // 仅处理node_modules目录
+            use: [
+              require.resolve('style-loader'),
+              {
+                loader: require.resolve('css-loader'),
+                options: {
+                  importLoaders: 1,
                 },
               },
               {
