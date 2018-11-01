@@ -11,6 +11,8 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
+// 覆盖ant-mobile主题
+const antTheme = paths.appPackageJson.antTheme
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -92,7 +94,9 @@ module.exports = {
       'pages': paths.appPages,
       'base': paths.appBase,
       'components': paths.appComponents,
+      'service': paths.appService,
       'store': paths.appStore,
+      'router': paths.appRouter,
       'utils': paths.appUtils,
       'assets': paths.appAssets,
     },
@@ -156,6 +160,26 @@ module.exports = {
               // It enables caching results in ./node_modules/.cache/babel-loader/
               // directory for faster rebuilds.
               cacheDirectory: true,
+              // presets: [
+              //   ["env", {
+              //     "modules": false,
+              //     "targets": {
+              //       "browsers": ["> 1%", "last 2 versions", "not ie <= 8"]
+              //     }
+              //   }],
+              //   "stage-2"
+              // ],
+              // plugins: [
+              //   "babel-plugin-transform-decorators-legacy",
+              //   "transform-runtime",
+              //   "react-hot-loader/babel",
+              //   [
+              //     "import", {
+              //       libraryName: "antd-mobile",
+              //       style: true   // true => 加载less版本antd-mobile ; "css" => 加载css版本antd-mobile
+              //     }
+              //   ]
+              // ]
             },
           },
           // "postcss" loader applies autoprefixer to our CSS.
@@ -164,9 +188,7 @@ module.exports = {
           // In production, we use a plugin to extract that CSS to a file, but
           // in development "style" loader enables hot editing of CSS.
           /**
-           * sass和css处理
-           * 排除node_modules目录
-           * 开启css模块化
+           * 只对非node_modules目录开启css模块化
            */
           {
             test: /\.(css|scss)$/,
@@ -207,9 +229,7 @@ module.exports = {
             ],
           },
           /**
-           * less处理
-           * 排除node_modules目录
-           * 开启css模块化
+           * less处理,只对非node_modules目录开启css模块化.
            */
           {
             test: /\.less$/,
@@ -245,18 +265,23 @@ module.exports = {
                 },
               },
               {
-                loader: require.resolve('less-loader')
+                loader: require.resolve('less-loader'),
+                // 似乎这里可以不配置
+                // options: {
+                //   modifyVars: antTheme, // 覆盖ant-mobile主题
+                //   include: /node_modules/,
+                // },
               }
             ],
           },
           /**
-           * sass和css处理
-           * 针对node_modules目录
-           * 不开启css模块化
+           * node_modules目录专用,
+           * 如:ant-mobile,单独开启css/less编译,不带css模块化;
+           * 配置覆盖ant-mobile主题.
            */
           {
-            test: /\.(css|scss)$/,
-            include: /node_modules/,  // 仅处理node_modules目录
+            test: /\.(less|css)$/,
+            include: /node_modules/,  // 只处理node_modules目录
             use: [
               require.resolve('style-loader'),
               {
@@ -286,48 +311,11 @@ module.exports = {
                 },
               },
               {
-                loader: require.resolve('sass-loader')
-              }
-            ],
-          },
-          /**
-           * less处理
-           * 针对node_modules目录
-           * 不开启css模块化
-           */
-          {
-            test: /\.less$/,
-            include: /node_modules/,  // 仅处理node_modules目录
-            use: [
-              require.resolve('style-loader'),
-              {
-                loader: require.resolve('css-loader'),
+                loader: require.resolve('less-loader'),
                 options: {
-                  importLoaders: 1,
+                  modifyVars: antTheme, // 覆盖ant-mobile主题
+                  include: /node_modules/,
                 },
-              },
-              {
-                loader: require.resolve('postcss-loader'),
-                options: {
-                  // Necessary for external CSS imports to work
-                  // https://github.com/facebookincubator/create-react-app/issues/2677
-                  ident: 'postcss',
-                  plugins: () => [
-                    require('postcss-flexbugs-fixes'),
-                    autoprefixer({
-                      browsers: [
-                        '>1%',
-                        'last 4 versions',
-                        'Firefox ESR',
-                        'not ie < 9', // React doesn't support IE8 anyway
-                      ],
-                      flexbox: 'no-2009',
-                    }),
-                  ],
-                },
-              },
-              {
-                loader: require.resolve('less-loader')
               }
             ],
           },

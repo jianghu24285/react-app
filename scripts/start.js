@@ -7,11 +7,12 @@ process.env.NODE_ENV = 'development';
 // 配置静态资源url,最终影响output下的publicPath(开发环境不需要配置).
 process.env.PUBLIC_URL = '';
 
-// 自定义的环境变量,必须 REACT_APP 打头,否则编译时会被忽略 !!
+// 自定义的环境变量,必须 REACT_APP 打头,否则会再编译时被忽略 !!
 
 // 编译/发布环境 => 开发环境
 process.env.REACT_APP_BUILD_ENV = 'development';
-// base url,例: 'www.test.baidu.com'
+// base url,和接口有关的,例: '//open.test.ximalaya.com'
+// 本地环境设置了代理,接口不需要配置域名.
 process.env.REACT_APP_BASE_URL = '';
 
 // Makes the script crash on unhandled rejections instead of silently

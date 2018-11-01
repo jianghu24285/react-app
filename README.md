@@ -1,6 +1,1 @@
-# React单页模版
-
-## 技术栈
-```sh
-  react + react-router + mobx + axios
-```
+# 123知识狂欢节-联合福利社

@@ -12,6 +12,8 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
+// 覆盖ant-mobile主题
+const antTheme = paths.appPackageJson.antTheme
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -35,7 +37,8 @@ if (env.stringified['process.env'].NODE_ENV !== '"production"') {
 }
 
 // Note: defined here because it will be used more than once.
-const cssFilename = 'static/css/[name].[contenthash:8].css';
+// const cssFilename = 'static/css/[name].[contenthash:8].css';
+const cssFilename = 'static/css/[name].css';
 
 // ExtractTextPlugin expects the build output to be flat.
 // (See https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/27)
@@ -77,7 +80,8 @@ module.exports = {
     // Generated JS file names (with nested folders).
     // There will be one main bundle, and one file per asynchronous chunk.
     // We don't currently advertise code splitting but Webpack supports it.
-    filename: 'static/js/[name].[chunkhash:8].js',
+    // filename: 'static/js/[name].[chunkhash:8].js',
+    filename: 'static/js/[name].js',
     chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
     // We inferred the "public path" (such as / or /my-project) from homepage.
     publicPath: publicPath,
@@ -112,7 +116,9 @@ module.exports = {
       'pages': paths.appPages,
       'base': paths.appBase,
       'components': paths.appComponents,
+      'service': paths.appService,
       'store': paths.appStore,
+      'router': paths.appRouter,
       'utils': paths.appUtils,
       'assets': paths.appAssets,
     },
@@ -170,8 +176,26 @@ module.exports = {
             include: paths.appSrc,
             loader: require.resolve('babel-loader'),
             options: {
-              
               compact: true,
+              // presets: [
+              //   ["env", {
+              //     "modules": false,
+              //     "targets": {
+              //       "browsers": ["> 1%", "last 2 versions", "not ie <= 8"]
+              //     }
+              //   }],
+              //   "stage-2"
+              // ],
+              // plugins: [
+              //   "babel-plugin-transform-decorators-legacy",
+              //   "transform-runtime",
+              //   [
+              //     "import", {
+              //       libraryName: "antd-mobile",
+              //       style: true   // true => 加载less版本antd-mobile ; "css" => 加载css版本antd-mobile
+              //     }
+              //   ]
+              // ]
             },
           },
           // The notation here is somewhat confusing.
@@ -187,9 +211,7 @@ module.exports = {
           // use the "style" loader inside the async code so CSS from them won't be
           // in the main CSS file.
           /**
-           * sass和css处理
-           * 排除node_modules目录
-           * 开启css模块化
+           * 只对非node_modules目录开启css模块化
            */
           {
             test: /\.(css|scss)$/,
@@ -245,9 +267,7 @@ module.exports = {
             // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
           },
           /**
-           * less处理
-           * 排除node_modules目录
-           * 开启css模块化
+           * less处理,只对非node_modules目录开启css模块化.
            */
           {
             test: /\.less$/,
@@ -293,7 +313,12 @@ module.exports = {
                       },
                     },
                     {
-                      loader: require.resolve('less-loader')
+                      loader: require.resolve('less-loader'),
+                      // 用来覆盖ant-mobile的配置,似乎不需要
+                      // options: {
+                      //   modifyVars: antTheme, // 覆盖ant-mobile主题
+                      //   include: /node_modules/,
+                      // },
                     }
                   ],
                 },
@@ -303,13 +328,13 @@ module.exports = {
             // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
           },
           /**
-           * sass和css处理
-           * 针对node_modules目录
-           * 不开启css模块化
+           * node_modules目录专用,
+           * 如:ant-mobile,单独开启css/less编译,不带css模块化;
+           * 配置覆盖ant-mobile主题;
            */
           {
-            test: /\.(css|scss)$/,
-            include: /node_modules/,  // 仅处理node_modules目录
+            test: /\.(less|css)$/,
+            include: /node_modules/,  // 只处理node_modules目录
             loader: ExtractTextPlugin.extract(
               Object.assign(
                 {
@@ -349,63 +374,11 @@ module.exports = {
                       },
                     },
                     {
-                      loader: require.resolve('sass-loader')
-                    }
-                  ],
-                },
-                extractTextPluginOptions
-              )
-            ),
-            // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
-          },
-          /**
-           * less处理
-           * 针对node_modules目录
-           * 不开启css模块化
-           */
-          {
-            test: /\.less$/,
-            include: /node_modules/,  // 仅处理node_modules目录
-            loader: ExtractTextPlugin.extract(
-              Object.assign(
-                {
-                  fallback: {
-                    loader: require.resolve('style-loader'),
-                    options: {
-                      hmr: false,
-                    },
-                  },
-                  use: [
-                    {
-                      loader: require.resolve('css-loader'),
+                      loader: require.resolve('less-loader'),
                       options: {
-                        importLoaders: 1,
-                        minimize: true,
-                        sourceMap: shouldUseSourceMap,
+                        modifyVars: antTheme, // 覆盖ant-mobile主题
+                        include: /node_modules/,
                       },
-                    },
-                    {
-                      loader: require.resolve('postcss-loader'),
-                      options: {
-                        // Necessary for external CSS imports to work
-                        // https://github.com/facebookincubator/create-react-app/issues/2677
-                        ident: 'postcss',
-                        plugins: () => [
-                          require('postcss-flexbugs-fixes'),
-                          autoprefixer({
-                            browsers: [
-                              '>1%',
-                              'last 4 versions',
-                              'Firefox ESR',
-                              'not ie < 9', // React doesn't support IE8 anyway
-                            ],
-                            flexbox: 'no-2009',
-                          }),
-                        ],
-                      },
-                    },
-                    {
-                      loader: require.resolve('less-loader')
                     }
                   ],
                 },
@@ -472,6 +445,8 @@ module.exports = {
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false,
+        drop_debugger: true, // 去除debugger
+        drop_console: true, // 去除console
         // Disabled because of an issue with Uglify breaking seemingly valid code:
         // https://github.com/facebookincubator/create-react-app/issues/2376
         // Pending further investigation:
