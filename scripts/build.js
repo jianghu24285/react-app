@@ -5,7 +5,7 @@ process.env.BABEL_ENV = 'production';
 process.env.NODE_ENV = 'production';
 
 // 配置静态资源url,最终影响output下的publicPath,例: '//s1.xmcdn.com/sr012018/react-app/last/build/'
-process.env.PUBLIC_URL = '//s1.xmcdn.com/sr012018/open-discount/last/build/';
+process.env.PUBLIC_URL = '';
 // 关闭source-map
 process.env.GENERATE_SOURCEMAP = false;
 

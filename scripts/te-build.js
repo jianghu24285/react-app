@@ -5,14 +5,14 @@ process.env.BABEL_ENV = 'production';
 process.env.NODE_ENV = 'production';
 
 // 配置静态资源url,最终影响output下的publicPath 
-process.env.PUBLIC_URL = '//static2.test.ximalaya.com/sr012018/open-discount/last/build/';
+process.env.PUBLIC_URL = '';
 
 // 自定义的环境变量,必须 REACT_APP 打头,否则会再编译时被忽略 !!
 
 // 编译/发布环境 => 测试环境
 process.env.REACT_APP_BUILD_ENV = 'test';
-// base url,和接口有关的,例: '//open.test.ximalaya.com'
-process.env.REACT_APP_BASE_URL = '//open.test.ximalaya.com';
+// base url,和接口有关的,例: ''
+process.env.REACT_APP_BASE_URL = '';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will

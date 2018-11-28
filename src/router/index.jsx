@@ -7,7 +7,7 @@ export default class Router extends Component {
   render() {
     return (
       <Switch>
-        <Route path='/' component={HelloWorld} />
+        <Route path='/' exact component={HelloWorld} />
         <Route path='/test' component={HelloWorld} />
         
       </Switch>

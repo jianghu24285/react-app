@@ -4,17 +4,17 @@
  * @Author: Eleven 
  * @Date: 2018-10-30 15:36:04 
  * @Last Modified by: Eleven
- * @Last Modified time: 2018-11-01 09:45:28
+ * @Last Modified time: 2018-11-28 15:00:37
  */
 
-import $ajax from './ajax'
-import api from './api'
+import $axios from './$axios'
 
 const service = {
-  // 测试接口
   test() {
-    return $ajax.get(api.TEST)
-  }
+    const url = ``
+    
+    return $axios.get(url)
+  },
 }
 
 export default service

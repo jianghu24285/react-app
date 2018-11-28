@@ -1,12 +1,11 @@
 /* 
- * @Desc: axios,创建实例,增加拦截器.
+ * @Desc: 创建axios实例,添加请求/响应拦截器.
  * @Author: Eleven 
- * @Date: 2018-10-30 15:36:50 
+ * @Date: 2018-11-28 15:25:09 
  * @Last Modified by: Eleven
- * @Last Modified time: 2018-10-31 23:50:48
+ * @Last Modified time: 2018-11-28 15:25:32
  */
 
-import { Toast } from 'antd-mobile'
 import axios from 'axios'
 import { BASE_URL } from 'utils'
 
@@ -43,7 +42,6 @@ instance.interceptors.response.use( response => {
       
     }
     if( status >= 500 ){
-      Toast.info('服务器异常')
       console.log(res.message)
     }
 

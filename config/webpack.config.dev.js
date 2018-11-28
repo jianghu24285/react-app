@@ -188,11 +188,14 @@ module.exports = {
           // In production, we use a plugin to extract that CSS to a file, but
           // in development "style" loader enables hot editing of CSS.
           /**
-           * 只对非node_modules目录开启css模块化
+           * 只对非node_modules和非assets目录开启css模块化
            */
           {
             test: /\.(css|scss)$/,
-            exclude: /node_modules/,  // 不处理node_modules目录
+            exclude: [
+              /node_modules/, 
+              /src\/assets/,
+            ], // 不处理node_modules和assets目录
             use: [
               require.resolve('style-loader'),
               {
@@ -229,11 +232,14 @@ module.exports = {
             ],
           },
           /**
-           * less处理,只对非node_modules目录开启css模块化.
+           * less处理,只对非node_modules和非assets目录开启css模块化.
            */
           {
             test: /\.less$/,
-            exclude: /node_modules/,  // 不处理node_modules目录
+            exclude: [
+              /node_modules/, 
+              /src\/assets/,
+            ], // 不处理node_modules和assets目录
             use: [
               require.resolve('style-loader'),
               {
@@ -275,13 +281,16 @@ module.exports = {
             ],
           },
           /**
-           * node_modules目录专用,
+           * node_modules和assets目录专用,
            * 如:ant-mobile,单独开启css/less编译,不带css模块化;
            * 配置覆盖ant-mobile主题.
            */
           {
             test: /\.(less|css)$/,
-            include: /node_modules/,  // 只处理node_modules目录
+            include: [
+              /node_modules/,
+              /src\/assets/,
+            ],  // 只处理node_modules和assets目录
             use: [
               require.resolve('style-loader'),
               {
@@ -315,6 +324,7 @@ module.exports = {
                 options: {
                   modifyVars: antTheme, // 覆盖ant-mobile主题
                   include: /node_modules/,
+                  javascriptEnabled: true,
                 },
               }
             ],

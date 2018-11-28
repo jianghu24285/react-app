@@ -30,6 +30,11 @@ const publicUrl = publicPath.slice(0, -1);
 // Get environment variables to inject into our app.
 const env = getClientEnvironment(publicUrl);
 
+// 是否删除debugger
+const isDropDebugger = process.env.REACT_APP_BUILD_ENV === 'production' ? true : false;
+// 是否删除console
+const isDropConsole = process.env.REACT_APP_BUILD_ENV === 'production' ? true : false;
+
 // Assert this just to be safe.
 // Development builds of React are slow and not intended for production.
 if (env.stringified['process.env'].NODE_ENV !== '"production"') {
@@ -211,11 +216,14 @@ module.exports = {
           // use the "style" loader inside the async code so CSS from them won't be
           // in the main CSS file.
           /**
-           * 只对非node_modules目录开启css模块化
+           * 只对非node_modules和非assets目录开启css模块化
            */
           {
             test: /\.(css|scss)$/,
-            exclude: /node_modules/,  // 不处理node_modules目录
+            exclude: [
+              /node_modules/,
+              /src\/assets/,
+            ],  // 不处理node_modules和assets目录
             loader: ExtractTextPlugin.extract(
               Object.assign(
                 {
@@ -267,11 +275,14 @@ module.exports = {
             // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
           },
           /**
-           * less处理,只对非node_modules目录开启css模块化.
+           * less处理,只对非node_modules和非assets目录开启css模块化.
            */
           {
             test: /\.less$/,
-            exclude: /node_modules/,  // 不处理node_modules目录
+            exclude: [
+              /node_modules/,
+              /src\/assets/,
+            ],  // 不处理node_modules和assets目录
             loader: ExtractTextPlugin.extract(
               Object.assign(
                 {
@@ -328,13 +339,16 @@ module.exports = {
             // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
           },
           /**
-           * node_modules目录专用,
+           * node_modules和assets目录专用,
            * 如:ant-mobile,单独开启css/less编译,不带css模块化;
            * 配置覆盖ant-mobile主题;
            */
           {
             test: /\.(less|css)$/,
-            include: /node_modules/,  // 只处理node_modules目录
+            include: [
+              /node_modules/,
+              /src\/assets/,
+            ],  // 只处理node_modules和assets目录
             loader: ExtractTextPlugin.extract(
               Object.assign(
                 {
@@ -378,6 +392,7 @@ module.exports = {
                       options: {
                         modifyVars: antTheme, // 覆盖ant-mobile主题
                         include: /node_modules/,
+                        javascriptEnabled: true,
                       },
                     }
                   ],
@@ -445,8 +460,8 @@ module.exports = {
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false,
-        drop_debugger: true, // 去除debugger
-        drop_console: true, // 去除console
+        drop_debugger: isDropDebugger, // 去除debugger
+        drop_console: isDropConsole, // 去除console
         // Disabled because of an issue with Uglify breaking seemingly valid code:
         // https://github.com/facebookincubator/create-react-app/issues/2376
         // Pending further investigation:
