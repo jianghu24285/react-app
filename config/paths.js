@@ -52,7 +52,7 @@ module.exports = {
   appService: resolveApp('src/service'),
   appStore: resolveApp('src/store'),
   appRouter: resolveApp('src/router'),
-  appBase: resolveApp('src/base'),
+  appCommon: resolveApp('src/common'),
   appAssets: resolveApp('src/assets'),
   appUtils: resolveApp('src/utils'),
   yarnLockFile: resolveApp('yarn.lock'),

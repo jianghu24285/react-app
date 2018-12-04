@@ -4,17 +4,24 @@
  * @Author: Eleven 
  * @Date: 2018-10-30 15:36:04 
  * @Last Modified by: Eleven
- * @Last Modified time: 2018-11-28 15:00:37
+ * @Last Modified time: 2018-12-04 15:20:55
  */
 
-import $axios from './$axios'
+import $axios from 'utils/$axios'
+import { isDev } from 'utils'
+
+// 开发环境,url统一添加前缀,方便接口本地代理
+const prev = isDev ? '/api' : ''
 
 const service = {
   test() {
-    const url = ``
+    const url = `${prev}/data/test`
     
     return $axios.get(url)
   },
+
+
+
 }
 
 export default service

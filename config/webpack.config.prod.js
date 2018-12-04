@@ -12,8 +12,6 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
-// 覆盖ant-mobile主题
-const antTheme = paths.appPackageJson.antTheme
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -42,8 +40,8 @@ if (env.stringified['process.env'].NODE_ENV !== '"production"') {
 }
 
 // Note: defined here because it will be used more than once.
-// const cssFilename = 'static/css/[name].[contenthash:8].css';
-const cssFilename = 'static/css/[name].css';
+const cssFilename = 'static/css/[name].[contenthash:8].css';
+// const cssFilename = 'static/css/[name].css';
 
 // ExtractTextPlugin expects the build output to be flat.
 // (See https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/27)
@@ -85,8 +83,8 @@ module.exports = {
     // Generated JS file names (with nested folders).
     // There will be one main bundle, and one file per asynchronous chunk.
     // We don't currently advertise code splitting but Webpack supports it.
-    // filename: 'static/js/[name].[chunkhash:8].js',
-    filename: 'static/js/[name].js',
+    filename: 'static/js/[name].[chunkhash:8].js',
+    // filename: 'static/js/[name].js',
     chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
     // We inferred the "public path" (such as / or /my-project) from homepage.
     publicPath: publicPath,
@@ -119,7 +117,7 @@ module.exports = {
       'react-native': 'react-native-web',
       'src': paths.appSrc,
       'pages': paths.appPages,
-      'base': paths.appBase,
+      'common': paths.appCommon,
       'components': paths.appComponents,
       'service': paths.appService,
       'store': paths.appStore,
@@ -182,25 +180,7 @@ module.exports = {
             loader: require.resolve('babel-loader'),
             options: {
               compact: true,
-              // presets: [
-              //   ["env", {
-              //     "modules": false,
-              //     "targets": {
-              //       "browsers": ["> 1%", "last 2 versions", "not ie <= 8"]
-              //     }
-              //   }],
-              //   "stage-2"
-              // ],
-              // plugins: [
-              //   "babel-plugin-transform-decorators-legacy",
-              //   "transform-runtime",
-              //   [
-              //     "import", {
-              //       libraryName: "antd-mobile",
-              //       style: true   // true => 加载less版本antd-mobile ; "css" => 加载css版本antd-mobile
-              //     }
-              //   ]
-              // ]
+              // babel插件配置提取到了package.json
             },
           },
           // The notation here is somewhat confusing.
@@ -265,7 +245,7 @@ module.exports = {
                       },
                     },
                     {
-                      loader: require.resolve('sass-loader')
+                      loader: require.resolve('sass-loader'),
                     }
                   ],
                 },
@@ -325,11 +305,6 @@ module.exports = {
                     },
                     {
                       loader: require.resolve('less-loader'),
-                      // 用来覆盖ant-mobile的配置,似乎不需要
-                      // options: {
-                      //   modifyVars: antTheme, // 覆盖ant-mobile主题
-                      //   include: /node_modules/,
-                      // },
                     }
                   ],
                 },
@@ -339,9 +314,9 @@ module.exports = {
             // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
           },
           /**
-           * node_modules和assets目录专用,
-           * 如:ant-mobile,单独开启css/less编译,不带css模块化;
-           * 配置覆盖ant-mobile主题;
+           * node_modules和assets目录专用:
+           *  1.一些第三方包,需要单独开启css/less编译,不带css模块化;
+           *  2.其它如sass/stylus,如果用到需要再配置;
            */
           {
             test: /\.(less|css)$/,
@@ -389,11 +364,6 @@ module.exports = {
                     },
                     {
                       loader: require.resolve('less-loader'),
-                      options: {
-                        modifyVars: antTheme, // 覆盖ant-mobile主题
-                        include: /node_modules/,
-                        javascriptEnabled: true,
-                      },
                     }
                   ],
                 },

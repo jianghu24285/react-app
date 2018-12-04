@@ -11,8 +11,6 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
-// 覆盖ant-mobile主题
-const antTheme = paths.appPackageJson.antTheme
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -92,7 +90,7 @@ module.exports = {
       'react-native': 'react-native-web',
       'src': paths.appSrc,
       'pages': paths.appPages,
-      'base': paths.appBase,
+      'common': paths.appCommon,
       'components': paths.appComponents,
       'service': paths.appService,
       'store': paths.appStore,
@@ -160,26 +158,7 @@ module.exports = {
               // It enables caching results in ./node_modules/.cache/babel-loader/
               // directory for faster rebuilds.
               cacheDirectory: true,
-              // presets: [
-              //   ["env", {
-              //     "modules": false,
-              //     "targets": {
-              //       "browsers": ["> 1%", "last 2 versions", "not ie <= 8"]
-              //     }
-              //   }],
-              //   "stage-2"
-              // ],
-              // plugins: [
-              //   "babel-plugin-transform-decorators-legacy",
-              //   "transform-runtime",
-              //   "react-hot-loader/babel",
-              //   [
-              //     "import", {
-              //       libraryName: "antd-mobile",
-              //       style: true   // true => 加载less版本antd-mobile ; "css" => 加载css版本antd-mobile
-              //     }
-              //   ]
-              // ]
+              // babel插件配置提取到了package.json
             },
           },
           // "postcss" loader applies autoprefixer to our CSS.
@@ -227,7 +206,7 @@ module.exports = {
                 },
               },
               {
-                loader: require.resolve('sass-loader')
+                loader: require.resolve('sass-loader'),
               }
             ],
           },
@@ -272,18 +251,13 @@ module.exports = {
               },
               {
                 loader: require.resolve('less-loader'),
-                // 似乎这里可以不配置
-                // options: {
-                //   modifyVars: antTheme, // 覆盖ant-mobile主题
-                //   include: /node_modules/,
-                // },
               }
             ],
           },
           /**
-           * node_modules和assets目录专用,
-           * 如:ant-mobile,单独开启css/less编译,不带css模块化;
-           * 配置覆盖ant-mobile主题.
+           * node_modules和assets目录专用:
+           *  1.一些第三方包,需要单独开启css/less编译,不带css模块化;
+           *  2.其它如sass/stylus,如果用到需要再配置;
            */
           {
             test: /\.(less|css)$/,
@@ -321,11 +295,6 @@ module.exports = {
               },
               {
                 loader: require.resolve('less-loader'),
-                options: {
-                  modifyVars: antTheme, // 覆盖ant-mobile主题
-                  include: /node_modules/,
-                  javascriptEnabled: true,
-                },
               }
             ],
           },
